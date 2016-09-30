@@ -1,21 +1,21 @@
 package main
 
 import (
-	"os"
-	"path/filepath"
-
 	"bytes"
 	"crypto/sha256"
 	"fmt"
-	"github.com/Sirupsen/logrus"
-	"github.com/ogier/pflag"
-	"gopkg.in/olivere/elastic.v3"
 	"io"
 	"log"
 	"math"
+	"os"
 	"os/exec"
+	"path/filepath"
 	"regexp"
 	"strconv"
+
+	"github.com/Sirupsen/logrus"
+	"github.com/ogier/pflag"
+	"gopkg.in/olivere/elastic.v3"
 )
 
 var (
@@ -194,7 +194,7 @@ func walkFn(path string, fi os.FileInfo, err error) error {
 	}
 
 	if t := tagTrack.FindStringSubmatch(metaString); len(t) > 1 {
-		song["track"]= t[1]
+		song["track"] = t[1]
 	}
 
 	if t := tagDuration.FindStringSubmatch(metaString); len(t) > 1 {
