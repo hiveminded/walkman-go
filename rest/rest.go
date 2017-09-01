@@ -3,21 +3,24 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/Sirupsen/logrus"
-	"github.com/kataras/iris"
 	"io/ioutil"
 	"net/http"
 	"strings"
+
+	"github.com/Sirupsen/logrus"
 	"github.com/iris-contrib/middleware/cors"
+	"github.com/kataras/iris"
 )
 
 func main() {
-	iris.Use(cors.Default()) // crs
-	iris.Get("/songs/_search", GetSongs)
-	iris.Listen(":8080")
+	app := iris.New()
+	app.WrapRouter(cors.WrapNext(cors.Options{})) // crs
+
+	app.Get("/songs/_search", GetSongs)
+	app.Run(iris.Addr(":8080"))
 }
 
-func GetSongs(c *iris.Context) {
+func GetSongs(c iris.Context) {
 	bs, err := json.Marshal(c.URLParams())
 	assertNil(err)
 
@@ -35,7 +38,8 @@ func GetSongs(c *iris.Context) {
 	var result map[string]interface{}
 	assertNil(json.Unmarshal(body, &result))
 
-	c.JSON(resp.StatusCode, result)
+	c.StatusCode(resp.StatusCode)
+	c.JSON(result)
 }
 
 // assertNil panic if the test is not nil
